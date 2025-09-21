@@ -1,0 +1,21 @@
+{
+  "name": "live-app",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "emulators": "firebase emulators:start --only auth,firestore,functions,hosting"
+  },
+  "dependencies": {
+    "axios": "^1.4.0",
+    "firebase": "^10.9.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "@daily-co/daily-js": "^0.30.0"
+  },
+  "devDependencies": {
+    "vite": "^5.0.0"
+  }
+}
