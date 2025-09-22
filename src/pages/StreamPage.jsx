@@ -1,11 +1,12 @@
-import React, { useState } from 'react'
-import StreamerPanel from '../components/StreamerPanel'
-import StreamPlayer from '../components/StreamPlayer'
-import ChatBox from '../components/ChatBox'
-import GiftsPanel from '../components/GiftsPanel'
+// src/pages/StreamPage.jsx
+import React, { useState } from 'react';
+import StreamerPanel from '../components/StreamerPanel';
+import StreamPlayer from '../components/StreamPlayer';
+import ChatBox from '../components/ChatBox';
+import GiftsPanel from '../components/GiftsPanel';
 
 export default function StreamPage({ user }) {
-  const [roomName, setRoomName] = useState('')
+  const [roomName, setRoomName] = useState('');
 
   return (
     <div style={{display:'grid', gridTemplateColumns:'1fr 420px', gap:12}}>
@@ -17,11 +18,10 @@ export default function StreamPage({ user }) {
           {roomName && <StreamPlayer roomName={roomName} user={user} />}
         </div>
       </div>
-
       <aside>
         <ChatBox streamId={roomName} />
         <GiftsPanel streamId={roomName} />
       </aside>
     </div>
-  )
+  );
 }
