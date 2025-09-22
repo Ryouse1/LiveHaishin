@@ -1,7 +1,6 @@
-// src/Login.jsx
 import { useState } from "react";
-import { auth } from "./firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "./firebase";
 
 export default function Login({ onLogin }) {
   const [email, setEmail] = useState("");
@@ -11,9 +10,9 @@ export default function Login({ onLogin }) {
   const handleLogin = async () => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      onLogin(); // ログイン後に App 画面に遷移
-    } catch (e) {
-      setError("ログインに失敗しました");
+      onLogin();
+    } catch {
+      setError("ログイン失敗");
     }
   };
 
