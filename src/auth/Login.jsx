@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth'
 import { auth } from '../firebase'
+import { useUser } from '../context/UserContext'
 
 export default function Login() {
   const [email, setEmail] = useState('')
