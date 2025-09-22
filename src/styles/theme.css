@@ -1,0 +1,54 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* カラー */
+:root {
+  --primary-color: #ffb6c1; /* パステルピンク */
+  --secondary-color: #ffd1dc; /* 薄ピンク */
+  --accent-color: #fef3c7; /* パステルイエロー */
+  --bg-color: #fff0f5; /* ラベンダーブラッシュ */
+}
+
+/* 背景・フォント */
+body {
+  background-color: var(--bg-color);
+  font-family: 'Comic Neue', cursive, sans-serif;
+}
+
+/* ボタン */
+button {
+  @apply rounded-full px-4 py-2 font-bold text-white shadow-lg;
+  background: var(--primary-color);
+  transition: transform 0.2s;
+}
+button:hover {
+  transform: scale(1.05);
+  background: var(--secondary-color);
+}
+
+/* カード */
+.card {
+  @apply rounded-2xl shadow-md p-4 bg-white;
+  transition: transform 0.2s;
+}
+.card:hover {
+  transform: translateY(-5px);
+}
+
+/* コメント */
+.comment {
+  @apply bg-white rounded-xl p-2 m-1 shadow-sm;
+  font-size: 0.9rem;
+}
+
+/* ギフトアイコン */
+.gift {
+  @apply w-8 h-8;
+  animation: bounce 1s infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
