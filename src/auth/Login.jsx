@@ -1,38 +1,43 @@
-import React, { useState } from 'react'
-import { loginWithUsername, loginWithProvider } from '../utils/authHelpers'
+// src/Login.jsx
+import { useState } from "react";
+import { auth } from "./firebase";
+import { signInWithEmailAndPassword } from "firebase/auth";
 
-export default function Login(){
-  const [username, setUsername] = useState('')
-  const [pw, setPw] = useState('')
+export default function Login({ onLogin }) {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
-  async function handle(e){
-    e.preventDefault()
-    try{
-      await loginWithUsername(username.trim(), pw)
-      // onAuthStateChanged in App will update
-    }catch(err){
-      alert('ログイン失敗: ' + err.message)
+  const handleLogin = async () => {
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      onLogin(); // ログイン後に App 画面に遷移
+    } catch (e) {
+      setError("ログインに失敗しました");
     }
-  }
-
-  async function handleSSO(){
-    try{
-      await loginWithProvider()
-    }catch(err){
-      alert(err.message)
-    }
-  }
+  };
 
   return (
-    <div className="card">
-      <h3>ログイン</h3>
-      <form onSubmit={handle}>
-        <input placeholder="ユーザー名" value={username} onChange={e=>setUsername(e.target.value)} />
-        <input placeholder="パスワード" type="password" value={pw} onChange={e=>setPw(e.target.value)} />
-        <button type="submit">ログイン</button>
-      </form>
-      <hr />
-      <button onClick={handleSSO}>Google/Twitter/Apple でログイン (SSO)</button>
+    <div className="p-4 max-w-md mx-auto mt-20">
+      <h1 className="text-xl mb-4">ログイン</h1>
+      <input
+        type="email"
+        placeholder="メール"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        className="border p-2 w-full mb-2"
+      />
+      <input
+        type="password"
+        placeholder="パスワード"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        className="border p-2 w-full mb-2"
+      />
+      <button onClick={handleLogin} className="bg-blue-500 text-white px-4 py-2">
+        ログイン
+      </button>
+      {error && <p className="text-red-500 mt-2">{error}</p>}
     </div>
-  )
+  );
 }
