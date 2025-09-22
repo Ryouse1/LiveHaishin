@@ -1,38 +1,40 @@
 import React, { useState } from 'react'
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth'
-import { auth } from '../firebase'
-import { useUser } from '../context/UserContext'
+import { useNavigate } from 'react-router-dom'
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth'
 
 export default function Login() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [isSignUp, setIsSignUp] = useState(false)
+  const navigate = useNavigate()
+  const auth = getAuth()
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
+  const handleLogin = async () => {
     try {
-      if (isSignUp) {
-        await createUserWithEmailAndPassword(auth, email, password)
-      } else {
-        await signInWithEmailAndPassword(auth, email, password)
-      }
+      await signInWithEmailAndPassword(auth, email, password)
+      navigate('/stream')
     } catch (err) {
       console.error(err)
-      alert('認証に失敗しました')
+      alert('ログインに失敗しました')
+    }
+  }
+
+  const handleSignup = async () => {
+    try {
+      await createUserWithEmailAndPassword(auth, email, password)
+      navigate('/stream')
+    } catch (err) {
+      console.error(err)
+      alert('アカウント作成に失敗しました')
     }
   }
 
   return (
-    <div className="login-card">
-      <h2>{isSignUp ? '新規登録' : 'ログイン'}</h2>
-      <form onSubmit={handleSubmit}>
-        <input type="email" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} />
-        <input type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} />
-        <button type="submit">{isSignUp ? '登録' : 'ログイン'}</button>
-      </form>
-      <button onClick={() => setIsSignUp(!isSignUp)}>
-        {isSignUp ? 'ログインに戻る' : 'アカウント作成'}
-      </button>
+    <div style={{ padding: 20 }}>
+      <h2>ログイン / サインアップ</h2>
+      <input type="email" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} />
+      <input type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} />
+      <button onClick={handleLogin}>ログイン</button>
+      <button onClick={handleSignup}>アカウント作成</button>
     </div>
   )
 }
