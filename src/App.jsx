@@ -1,33 +1,22 @@
-import React, { useState, useEffect } from 'react'
-import { auth } from './firebase'
-import { onAuthStateChanged } from 'firebase/auth'
-import Home from './pages/Home'
-import StreamPage from './pages/StreamPage'
-import AdminPanel from './pages/AdminPanel'
+import { useState, useEffect } from "react";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "./firebase";
+import Login from "./Login";
+import LiveApp from "./LiveApp"; // 既存のライブ配信や部屋作成コンポーネント
 
-export default function App(){
-  const [user, setUser] = useState(null)
-  const [page, setPage] = useState('home') // 'home' | 'stream' | 'admin'
+export default function App() {
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  useEffect(()=>{
-    return onAuthStateChanged(auth, u => setUser(u))
-  },[])
+  useEffect(() => {
+    onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+      setLoading(false);
+    });
+  }, []);
 
-  return (
-    <div className="app">
-      <div className="header">
-        <h2>Live App</h2>
-        <div>
-          <button onClick={()=>setPage('home')}>Home</button>
-          <button onClick={()=>setPage('stream')}>配信/視聴</button>
-          <button onClick={()=>setPage('admin')}>管理</button>
-        </div>
-      </div>
-      <div>
-        {page==='home' && <Home user={user} />}
-        {page==='stream' && <StreamPage user={user} />}
-        {page==='admin' && <AdminPanel user={user} />}
-      </div>
-    </div>
-  )
+  if (loading) return <p>読み込み中...</p>;
+  if (!user) return <Login onLogin={() => setUser(auth.currentUser)} />;
+
+  return <LiveApp />; // ログイン後は既存の機能に遷移
 }
