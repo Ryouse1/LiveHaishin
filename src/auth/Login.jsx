@@ -1,6 +1,5 @@
-import { useState } from "react";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "./firebase";
+import React, { useState } from "react";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
 export default function Login({ onLogin }) {
   const [email, setEmail] = useState("");
@@ -8,35 +7,41 @@ export default function Login({ onLogin }) {
   const [error, setError] = useState("");
 
   const handleLogin = async () => {
+    const auth = getAuth();
     try {
-      await signInWithEmailAndPassword(auth, email, password);
-      onLogin();
-    } catch {
-      setError("ログイン失敗");
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      onLogin(userCredential.user);
+    } catch (err) {
+      setError(err.message);
     }
   };
 
   return (
-    <div className="p-4 max-w-md mx-auto mt-20">
-      <h1 className="text-xl mb-4">ログイン</h1>
-      <input
-        type="email"
-        placeholder="メール"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        className="border p-2 w-full mb-2"
-      />
-      <input
-        type="password"
-        placeholder="パスワード"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        className="border p-2 w-full mb-2"
-      />
-      <button onClick={handleLogin} className="bg-blue-500 text-white px-4 py-2">
-        ログイン
-      </button>
-      {error && <p className="text-red-500 mt-2">{error}</p>}
+    <div className="h-screen flex items-center justify-center bg-gray-100">
+      <div className="bg-white p-8 rounded shadow w-96">
+        <h1 className="text-2xl mb-6 text-center">ログイン</h1>
+        {error && <p className="text-red-500 mb-4">{error}</p>}
+        <input
+          type="email"
+          placeholder="メールアドレス"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className="border p-2 w-full mb-4 rounded"
+        />
+        <input
+          type="password"
+          placeholder="パスワード"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          className="border p-2 w-full mb-4 rounded"
+        />
+        <button
+          onClick={handleLogin}
+          className="bg-blue-500 text-white p-3 w-full rounded hover:bg-blue-600"
+        >
+          ログイン
+        </button>
+      </div>
     </div>
   );
 }
