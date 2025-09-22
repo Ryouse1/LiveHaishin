@@ -1,15 +1,7 @@
 import React from "react";
-import ReactDOM from "react-dom/client";
-import "./main.css"; // ← CSS を読み込む
+import { createRoot } from "react-dom/client";
+import App from "./App.jsx";
+import "./index.css"; // CSSがあれば
 
-function App() {
-  return (
-    <div className="app">
-      <div className="header">
-        <h1>ライブ配信アプリ</h1>
-      </div>
-    </div>
-  );
-}
-
-ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+const root = createRoot(document.getElementById("root"));
+root.render(<App />);
