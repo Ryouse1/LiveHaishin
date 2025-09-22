@@ -19,5 +19,5 @@ export default function App() {
 
   if (loading) return <p className="text-center mt-20">読み込み中…</p>;
 
-  return user ? <StreamPage /> : <Login onLogin={() => {}} />;
+  return user ? <StreamPage user={user} /> : <Login />;
 }
