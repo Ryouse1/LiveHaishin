@@ -1,21 +1,21 @@
-import { useState, useEffect } from 'react'
-import { onAuthStateChanged } from 'firebase/auth'
-import { auth } from './firebase.js'
-import Login from './auth/Login.jsx'
-import StreamPage from './pages/StreamPage.jsx'
+// src/App.jsx
+import React, { useState } from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import Login from './auth/Login';
+import StreamPage from './pages/StreamPage';
 
 export default function App() {
-  const [user, setUser] = useState(null)
-  const [loading, setLoading] = useState(true)
+  const [user, setUser] = useState(null);
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (u) => {
-      setUser(u)
-      setLoading(false)
-    })
-    return () => unsubscribe()
-  }, [])
-
-  if (loading) return <p>Loading...</p>
-  return user ? <StreamPage user={user} /> : <Login />
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Login setUser={setUser} />} />
+        <Route 
+          path="/stream" 
+          element={user ? <StreamPage user={user} /> : <Navigate to="/" />} 
+        />
+      </Routes>
+    </BrowserRouter>
+  );
 }
