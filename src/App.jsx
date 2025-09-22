@@ -1,22 +1,26 @@
-import { useState, useEffect } from "react";
-import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "./firebase";
-import Login from "./Login";
-import LiveApp from "./LiveApp"; // 既存のライブ配信や部屋作成コンポーネント
+// src/App.jsx
+import React from "react";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import Login from "./pages/Login.jsx";
+import Dashboard from "./pages/Dashboard.jsx";
 
-export default function App() {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+function App() {
+  const [user, setUser] = React.useState(null); // ログイン状態管理
 
-  useEffect(() => {
-    onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
-      setLoading(false);
-    });
-  }, []);
-
-  if (loading) return <p>読み込み中...</p>;
-  if (!user) return <Login onLogin={() => setUser(auth.currentUser)} />;
-
-  return <LiveApp />; // ログイン後は既存の機能に遷移
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route 
+          path="/" 
+          element={user ? <Navigate to="/dashboard" /> : <Login setUser={setUser} />} 
+        />
+        <Route 
+          path="/dashboard" 
+          element={user ? <Dashboard /> : <Navigate to="/" />} 
+        />
+      </Routes>
+    </BrowserRouter>
+  );
 }
+
+export default App;
