@@ -18,10 +18,18 @@ export default function GiftsPanel({ streamId }) {
   }
 
   return (
-    <div className="card">
-      <h4>ギフト</h4>
-      <button onClick={()=>sendGift(100)}>¥100 ギフト</button>
-      <button onClick={()=>sendGift(500)}>¥500 ギフト</button>
+    <div className="card gifts-card">
+      <div className="card-header">
+        <h4>ギフト</h4>
+        <span className="muted">クリエイター応援</span>
+      </div>
+      <p className="muted">配信を選択するとギフトを送れます。</p>
+      <div className="gift-grid">
+        <button onClick={()=>sendGift(100)} disabled={!streamId}>¥100</button>
+        <button onClick={()=>sendGift(500)} disabled={!streamId}>¥500</button>
+        <button onClick={()=>sendGift(1200)} disabled={!streamId}>¥1,200</button>
+        <button onClick={()=>sendGift(2500)} disabled={!streamId}>¥2,500</button>
+      </div>
     </div>
   )
 }
