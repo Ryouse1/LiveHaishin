@@ -1,19 +1,17 @@
 // src/auth/Login.jsx
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../firebase';
 
-export default function Login({ setUser }) {
+export default function Login({ setUser, onSuccess }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const navigate = useNavigate();
 
   const handleRegister = async () => {
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       setUser(userCredential.user);
-      navigate('/stream');
+      onSuccess?.();
     } catch (err) {
       console.error(err);
       alert(err.message);
@@ -24,7 +22,7 @@ export default function Login({ setUser }) {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       setUser(userCredential.user);
-      navigate('/stream');
+      onSuccess?.();
     } catch (err) {
       console.error(err);
       alert(err.message);
