@@ -8,12 +8,37 @@ export default function StreamPlayer({ roomName, user }) {
   const [joined, setJoined] = useState(false)
 
   async function join(){
-    const token = await createToken(roomName, user?.uid || 'guest', false)
-    const callFrame = DailyIframe.createFrame(document.createElement('div'))
-    callRef.current = callFrame
-    frameRef.current.appendChild(callFrame.iframe)
-    await callFrame.join({ url: `https://${roomName}.daily.co/${roomName}`, token: token?.token })
-    setJoined(true)
+    if (joined || !frameRef.current) return
+    const dailyDomain = import.meta.env.VITE_DAILY_DOMAIN
+    if (!dailyDomain) {
+      alert('Daily.coのドメイン設定(VITE_DAILY_DOMAIN)が見つかりません。')
+      return
+    }
+
+    let callFrame
+    try {
+      const token = await createToken(roomName, user?.uid || 'guest', false)
+      callFrame = DailyIframe.createFrame(document.createElement('div'))
+      callRef.current = callFrame
+      frameRef.current.appendChild(callFrame.iframe)
+      await callFrame.join({
+        url: `https://${dailyDomain}.daily.co/${roomName}`,
+        token: token?.token
+      })
+      setJoined(true)
+    } catch (error) {
+      console.error('Daily join failed', error)
+      if (callFrame) {
+        callFrame.leave()
+        callFrame.destroy()
+      }
+      callRef.current = null
+      if (frameRef.current) {
+        frameRef.current.innerHTML = ''
+      }
+      setJoined(false)
+      alert('配信への接続に失敗しました。時間をおいて再度お試しください。')
+    }
   }
 
   function leave(){
