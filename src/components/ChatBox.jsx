@@ -28,15 +28,28 @@ export default function ChatBox({ streamId }) {
   }
 
   return (
-    <div className="card">
-      <h4>チャット</h4>
-      <div style={{height:200, overflow:'auto', background:'#fafafa', padding:8}}>
-        {list.map(m => <div key={m.id}><b>{m.displayName}:</b> {m.text}</div>)}
-        <div ref={scrollRef} />
+    <div className="card chat-card">
+      <div className="card-header">
+        <h4>チャット</h4>
+        <span className="muted">{streamId ? 'リアルタイム' : '配信未選択'}</span>
       </div>
-      <div style={{marginTop:8}}>
-        <input value={text} onChange={e=>setText(e.target.value)} placeholder="コメント" />
-        <button onClick={send}>送信</button>
+      <div className="chat-list">
+        {streamId ? (
+          <>
+            {list.map(m => (
+              <div key={m.id} className="chat-message">
+                <b>{m.displayName}:</b> {m.text}
+              </div>
+            ))}
+            <div ref={scrollRef} />
+          </>
+        ) : (
+          <div className="empty-state">視聴する配信を選択するとチャットが表示されます。</div>
+        )}
+      </div>
+      <div className="chat-input">
+        <input value={text} onChange={e=>setText(e.target.value)} placeholder="コメント" disabled={!streamId} />
+        <button onClick={send} disabled={!streamId}>送信</button>
       </div>
     </div>
   )
